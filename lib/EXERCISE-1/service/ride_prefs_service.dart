@@ -1,5 +1,6 @@
 import '../model/ride_pref/ride_pref.dart';
 import '../repository/ride_preferences_repository.dart';
+import 'observer/ride_pref_listener.dart';
 
 ////
 ///   This service handles:
@@ -15,6 +16,9 @@ class RidePrefService {
 
   // The current preference
   RidePreference? _currentPreference;
+
+  // List of listeners
+  final List<RidePreferenceListener> _listeners = [];
 
   ///
   /// Private constructor
@@ -46,6 +50,18 @@ class RidePrefService {
   RidePreference? get currentPreference {
     print('Get  current  pref : $_currentPreference');
     return _currentPreference;
+  }
+
+  // add listener
+  void addListener(RidePreferenceListener listener) {
+    _listeners.add(listener);
+  }
+
+  // Notify all listeners
+  void _notifyListeners() {
+    for(var listener in _listeners) {
+      listener.onPreferenceSelected(_currentPreference!);
+    };
   }
 
   void setCurrentPreference(RidePreference preference) {
